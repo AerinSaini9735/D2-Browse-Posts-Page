@@ -1,4 +1,4 @@
-function QuestionPost() {
+function QuestionPost({formData, handleChange}) {
     return (
         <div>
             <div className="post-content">
@@ -7,15 +7,15 @@ function QuestionPost() {
             </div>
             <div className="question-title">
                 <span>Title</span>
-                <input type="search-box" className="question-input" placeholder = "Start your question with how, what, why, etc."></input>
+                <input type="text" name="title" className="question-input" placeholder = "Start your question with how, what, why, etc." value={formData.title} onChange={handleChange} maxLength={150} required></input>
             </div>
             <div className="question-problem">
                 <p>Describe your problem</p>
-                <textarea type="search-box" className="problem-input"></textarea>
+                <textarea name="content" className="problem-input" placeholder="Describe your question in detail" value={formData.content} onChange={handleChange} maxLength={4000} required></textarea>
             </div>
             <div className="tags-title">
                 <span>Tags</span>
-                <input type="search-box" className="tags-input" placeholder="Please add up to 3 tags to describe what your question is about e.g., java"></input>
+                <input type="text" name="tags" className="tags-input" placeholder="Please add up to 3 tags to describe what your question is " value={formData.tags} onChange={handleChange}></input>
             </div>
        
         </div>

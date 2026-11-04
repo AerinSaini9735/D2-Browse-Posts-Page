@@ -366,6 +366,206 @@ app.post("/upgrade-plan", authenticateToken, async (req, res) => {
     }
 });
 
+// Save a new post in Firestore
+app.post("/posts", authenticateToken, async (req, res) => {
+    try {
+        const { type, title, abstract, content, tags, plan } = req.body;
+
+
+        // Validate required fields
+        if (!type || !title || !content || !plan) {
+            return res.status(400).json({
+                success: false,
+                message: "Please fill in all required fields."
+            });
+        }
+
+        if (!["Question", "Article"].includes(type)) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid post type."
+            });
+        }
+
+        if (title.trim().length < 6 || title.trim().length > 150) {
+            return res.status(400).json({
+                success: false,
+                message: "Title must contain 6-150 characters."
+            });
+        }
+
+        if (!["Free", "Paid"].includes(plan)) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid post plan."
+            });
+        }
+
+        if (type === "Article" && (!abstract || !abstract.trim())) {
+            return res.status(400).json({
+                success: false,
+                message: "Article abstract is required."
+            });
+        }
+
+        if (type === "Question" && abstract) {
+            return res.status(400).json({
+                success: false,
+                message: "Questions should not contain an abstract."
+            });
+        }
+
+        if (typeof content !== "string" || !content.trim()) {
+            return res.status(400).json({
+                success: false,
+                message: "Post content is required."
+            });
+        }
+
+        if (content.length > (type === "Article" ? 10000 : 5000)) {
+            return res.status(400).json({
+                success: false,
+                message: "Post content is too long."
+            });
+        }
+
+        if (!Array.isArray(tags) || tags.length > 3 ||
+            tags.some(tag => typeof tag !== "string" ||
+                tag.trim().length < 2 || tag.trim().length > 20)) {
+            return res.status(400).json({
+                success: false,
+                message: "Please provide up to 3 valid tags."
+            });
+        }
+
+        // Get logged-in user
+        const email = req.user.email.toLowerCase();
+        const userRef = db.collection("users").doc(email);
+        const userDoc = await userRef.get();
+
+        if (!userDoc.exists) {
+            return res.status(404).json({
+                success: false,
+                message: "User account not found."
+            });
+        }
+
+        const user = userDoc.data();
+        const userPlan = user.plan || "Free";
+
+        // Check membership before allowing Paid posts
+        if (plan === "Paid" && userPlan !== "Paid") {
+            return res.status(403).json({
+                success: false,
+                message: "Upgrade to the Paid plan to publish Paid posts."
+            });
+        }
+
+        // Save post
+        const postRef = db.collection("posts").doc();
+
+        await postRef.set({
+            type,
+            title: title.trim(),
+            abstract: type === "Article" ? abstract.trim() : "",
+            content: content.trim(),
+            tags: tags.map(tag => tag.trim().toLowerCase()),
+            plan,
+            userId: email,
+            createdAt: new Date()
+        });
+
+        return res.status(201).json({
+            success: true,
+            message: "Post published successfully!",
+            postId: postRef.id
+        });
+
+    } catch (error) {
+        console.error("Post creation error:", error.message);
+
+        return res.status(500).json({
+            success: false,
+            message: "Unable to publish post. Please try again."
+        });
+    }
+
+});
+
+// Get posts based on user's membership
+app.get("/posts", async (req, res) => {
+try {
+let userPlan = "Free";
+
+    const token = req.headers.authorization;
+
+    // Check if user is logged in
+    if (token) {
+        const userToken = token.split(" ")[1];
+
+        if (!userToken) {
+            return res.status(401).json({
+                success: false,
+                message: "Invalid login token."
+            });
+        }
+
+        const decoded = jwt.verify(userToken, process.env.JWT_SECRET);
+
+        const userDoc = await db.collection("users")
+            .doc(decoded.email.toLowerCase())
+            .get();
+
+        if (!userDoc.exists) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found."
+            });
+        }
+
+        userPlan = userDoc.data().plan || "Free";
+    }
+
+    // Get posts from Firestore
+    let snapshot;
+
+    if (userPlan === "Paid") {
+        snapshot = await db.collection("posts").get();
+    } else {
+        snapshot = await db.collection("posts")
+            .where("plan", "==", "Free")
+            .get();
+    }
+
+    const posts = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+    }));
+
+    // Sort newest posts first
+    posts.sort((a, b) =>
+        b.createdAt.toMillis() - a.createdAt.toMillis()
+    );
+
+    return res.status(200).json({
+        success: true,
+        posts: posts
+    });
+
+} catch (error) {
+    console.error("Browse posts error:", error.message);
+
+    return res.status(500).json({
+        success: false,
+        message: "Unable to fetch posts."
+    });
+}
+
+
+});
+
+
+
 // Handle unknown routes
 app.use((req, res) => {
     res.status(404).json({

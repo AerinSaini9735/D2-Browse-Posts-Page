@@ -45,6 +45,12 @@ function Header() {
             </div>
 
             <div>
+                <p className="browse-post-button"onClick={() => navigate("/browse-posts")}>
+                    Browse Posts
+                </p>
+            </div>
+
+            <div>
                 <p className="pricing-button" onClick={() => navigate("/pricing")}>
                     Pricing
                 </p>

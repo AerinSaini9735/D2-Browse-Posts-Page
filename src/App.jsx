@@ -13,6 +13,7 @@ import pfp from './assets/pfp.webp'
 import Login from './login.jsx'
 import SignUp from './sign-up.jsx'
 import Post from './post.jsx'
+import BrowsePosts from './browseposts.jsx'
 
 function App() {
   return (
@@ -56,6 +57,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/Post" element={<Post />} />
+        <Route path="/Browse-posts" element={<BrowsePosts />} />
         <Route path="/pricing" element={<Pricing />} />
       </Routes>
 

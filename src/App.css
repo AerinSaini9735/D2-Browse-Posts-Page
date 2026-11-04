@@ -63,6 +63,30 @@ p {
     border-radius: 2px;
 }
 
+select {
+    padding: 10px 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: white;
+    color: #333;
+    font-size: 14px;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+select:hover {
+    border-color: #555;
+}
+
+select:focus {
+    border-color: #333;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
+}
+
+select option {
+    padding: 10px;
+}
 .post-button {
     display: flex;
     align-items: center;
@@ -76,13 +100,112 @@ p {
 
 .post-button:hover {
     border: 1px solid black;
-    
+
 }
 
 .post-button:active {
     background-color: #7777773d;
-    
-    
+
+}
+
+.browse-post-button {
+    display: flex;
+    align-items: center;
+    padding-left: 12px;
+    padding-right: 4px;
+    width: 100px;
+    height: 35px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: border 0.2s ease
+}
+
+.browse-post-button:hover {
+    border: 1px solid black;
+
+}
+
+.browse-post-button:active {
+    background-color: #7777773d;
+
+}
+
+.browse-container {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.browse-container h1 {
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.posts-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
+}
+
+.post-card {
+    padding: 25px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: white;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+.post-card h2 {
+    margin: 15px 0;
+}
+
+.post-label {
+    display: inline-block;
+    background: #e8f0ff;
+    color: #2456a6;
+    padding: 5px 10px;
+    border-radius: 5px;
+    margin-right: 8px;
+    font-size: 12px;
+}
+
+.post-tags {
+    margin: 15px 0;
+    color: #2878c8;
+}
+
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: end;
+    margin: 25px 0;
+    padding: 20px;
+    background: #f5f5f5;
+    border-radius: 10px;
+}
+
+.filters label {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.filters input,
+.filters select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.filters button {
+    padding: 10px 18px;
+    background: #333;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
 }
 
 .pricing-button {
@@ -102,8 +225,8 @@ p {
 
 .pricing-button:active {
     background-color: #7777773d;
-    
-    
+
+
 }
 
 .pricing-page {
@@ -220,7 +343,7 @@ p {
 }
 
 .payment-modal h2,
-.payment-modal > p {
+.payment-modal>p {
     text-align: center;
 }
 
@@ -258,7 +381,7 @@ p {
     gap: 15px;
 }
 
-.payment-row > div {
+.payment-row>div {
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -295,17 +418,20 @@ p {
 
 .login-button:hover {
     border: 1px solid black;
-    
+
 }
 
 .login-button:active {
     background-color: #7777773d;
 
 }
+
 .user-name {
-    margin-bottom: 0px;;
-    
+    margin-bottom: 0px;
+    ;
+
 }
+
 .logout-button {
     display: flex;
     align-items: center;
@@ -587,7 +713,7 @@ p {
     width: 90%;
     align-items: flex-start;
     justify-content: space-around;
-    margin: auto;                 
+    margin: auto;
     margin-bottom: 10px;
 }
 
@@ -635,6 +761,7 @@ p {
     font-weight: bold;
     padding: 5px;
 }
+
 .article h4,
 .tutorial h4 {
     font-size: 17px;
@@ -689,7 +816,7 @@ p {
     height: 130px;
     cursor: pointer;
     gap: 15px;
-    
+
 }
 
 .footer-column2 {
@@ -710,7 +837,7 @@ p {
     height: 280px;
     cursor: pointer;
     gap: 15px;
-    
+
 }
 
 .legal-block {
@@ -743,6 +870,7 @@ p {
     gap: 20px;
     padding-top: 15px;
 }
+
 .legal-block h2 {
     display: flex;
     flex-direction: column;
@@ -755,11 +883,12 @@ p {
     /* gap: 20px; */
 }
 
-.icons{
+.icons {
     display: flex;
     gap: 10px;
     font-size: 30px;
 }
+
 .legal-block {
     display: flex;
     flex-direction: column;
